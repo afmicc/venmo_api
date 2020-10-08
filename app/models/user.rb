@@ -17,6 +17,15 @@ class User < ApplicationRecord
   has_many :outgoing_friends, through: :outgoing_friendships, source: :friend
   has_many :incoming_friends, through: :incoming_friendships, source: :user
 
+  has_many :received_payments, -> { where(receiver: user) },
+           class_name: 'Payment',
+           dependent: :nullify,
+           inverse_of: :receiver
+  has_many :sent_payments, -> { where(sender: user) },
+           class_name: 'Payment',
+           dependent: :nullify,
+           inverse_of: :sender
+
   validates :name, presence: true
   validates :email, presence: true, uniqueness: { case_sensitive: false }
 
