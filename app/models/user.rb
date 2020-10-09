@@ -26,8 +26,12 @@ class User < ApplicationRecord
            dependent: :nullify,
            inverse_of: :sender
 
+  has_one :account, dependent: :destroy
+
   validates :name, presence: true
   validates :email, presence: true, uniqueness: { case_sensitive: false }
+
+  after_create :create_account
 
   def friends
     incoming_friends + outgoing_friends
@@ -40,5 +44,11 @@ class User < ApplicationRecord
               .pluck(:user_id, :friend_id)
               .flatten
               .uniq
+  end
+
+  private
+
+  def create_account
+    Account.create!(user: self)
   end
 end
