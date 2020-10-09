@@ -16,6 +16,11 @@ module Api
         @metadata = pagy_metadata(pagy)
       end
 
+      def balance
+        balance = current_user.account.balance
+        render json: { balance: balance }, status: :ok
+      end
+
       private
 
       def user_params
