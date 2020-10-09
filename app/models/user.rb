@@ -32,4 +32,13 @@ class User < ApplicationRecord
   def friends
     incoming_friends + outgoing_friends
   end
+
+  def contacts_for_feed
+    contacts = [id]
+    contacts += friends.pluck(:id)
+    Friendship.friendships_of(contacts)
+              .pluck(:user_id, :friend_id)
+              .flatten
+              .uniq
+  end
 end

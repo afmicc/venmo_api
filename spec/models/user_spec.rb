@@ -80,4 +80,44 @@ RSpec.describe User, type: :model do
       expect(subject).not_to contain_exactly(no_friend)
     end
   end
+
+  describe '#contacts_for_feed' do
+    let!(:user) { create(:user) }
+    let!(:friend) { create(:user) }
+    let!(:friend_2) { create(:user) }
+    let!(:second_level_friend) { create(:user) }
+    let!(:second_level_friend_2) { create(:user) }
+    let!(:no_friend) { create(:user) }
+    let!(:no_friend_2) { create(:user) }
+    let!(:user_friendships) do
+      [
+        create(:friendship, user: user, friend: friend),
+        create(:friendship, user: friend_2, friend: user),
+        create(:friendship, user: friend, friend: second_level_friend),
+        create(:friendship, user: second_level_friend_2, friend: friend_2)
+      ]
+    end
+    let!(:user_no_friendships) do
+      [
+        create(:friendship, user: second_level_friend, friend: no_friend),
+        create(:friendship, user: no_friend_2, friend: second_level_friend_2)
+      ]
+    end
+
+    subject { user.contacts_for_feed }
+
+    it 'contains user contact user‘s id' do
+      expect(subject).to contain_exactly(
+        user.id,
+        friend.id,
+        friend_2.id,
+        second_level_friend.id,
+        second_level_friend_2.id
+      )
+    end
+
+    it 'does not contain no friends users' do
+      expect(subject).not_to contain_exactly(no_friend.id, no_friend_2.id)
+    end
+  end
 end

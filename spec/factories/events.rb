@@ -13,5 +13,9 @@ FactoryBot.define do
   factory :event do
     user
     content { Faker::Lorem.paragraph }
+
+    trait :with_fake_created_at do
+      created_at { Faker::Date.backward }
+    end
   end
 end
