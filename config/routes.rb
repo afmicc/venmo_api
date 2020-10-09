@@ -6,6 +6,7 @@ Rails.application.routes.draw do
       resources :users, only: %i[show create] do
         member do
           get :feed
+          get :balance
         end
 
         scope module: :users do
