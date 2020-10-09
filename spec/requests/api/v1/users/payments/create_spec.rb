@@ -9,7 +9,19 @@ describe 'POST /api/v1/users/:user_id/payments', type: :request do
   context 'when params are right' do
     let(:user_id) { user.id }
     let(:friend_id) { friend.id }
-    let(:params) { { payment: attributes_for(:payment).merge(friend_id: friend_id) } }
+    let(:amount) { Faker::Number.between(from: 0.1, to: 999.99).round(2) }
+    let(:params) do
+      {
+        payment: attributes_for(:payment, amount: amount).merge(friend_id: friend_id)
+      }
+    end
+    let(:initial_user_balance) { amount * 2 }
+    let(:initial_friend_balance) { 0 }
+
+    before do
+      user.account.update!(balance: initial_user_balance)
+      friend.account.update!(balance: initial_friend_balance)
+    end
 
     context 'when the friendship exists' do
       let!(:friendship) { create(:friendship, user: user, friend: friend) }
@@ -50,9 +62,22 @@ describe 'POST /api/v1/users/:user_id/payments', type: :request do
         )
       end
 
+      it 'decreases user account balane' do
+        expect { send_payment }.to change { user.account.reload.balance }.by(-amount)
+      end
+
+      it 'increases friend account balane' do
+        expect { send_payment }.to change { friend.account.reload.balance }.by(amount)
+      end
+
       context 'when the params are inverted' do
         let(:user_id) { friend.id }
         let(:friend_id) { user.id }
+
+        before do
+          friend.account.update!(balance: initial_user_balance)
+          user.account.update!(balance: initial_friend_balance)
+        end
 
         it 'returns a successful response' do
           send_payment
@@ -88,6 +113,14 @@ describe 'POST /api/v1/users/:user_id/payments', type: :request do
                      " #{event.created_at.strftime('%d %b %H:%M')} " \
                      "- #{params[:payment][:description]}"
           )
+        end
+
+        it 'decreases friend account balane' do
+          expect { send_payment }.to change { friend.account.reload.balance }.by(-amount)
+        end
+
+        it 'increases user account balane' do
+          expect { send_payment }.to change { user.account.reload.balance }.by(amount)
         end
       end
     end
@@ -194,7 +227,7 @@ describe 'POST /api/v1/users/:user_id/payments', type: :request do
           expect(response.parsed_body).to include_json(
             errors:
             {
-              amount: include("can't be blank")
+              amount: include('must be greater than 0')
             }
           )
         end

@@ -1,18 +1,20 @@
 class PaymentCreationService
-  attr_accessor :user, :params
+  attr_reader :user, :event_register
+  attr_accessor :params
 
   def initialize(user)
     @user = user
+    @event_register = EventRegisterService.new
   end
 
   def create!(params)
     @params = params
 
     validate!
-
     ActiveRecord::Base.transaction do
       payment = create_payment
-      EventRegisterService.new.by_payment!(payment)
+      impact_balances
+      event_register.by_payment!(payment)
     end
   end
 
@@ -30,8 +32,20 @@ class PaymentCreationService
     Payment.create!(
       sender: user,
       receiver: friend,
-      amount: params[:amount],
+      amount: amount,
       description: params[:description] || ''
     )
+  end
+
+  def amount
+    @amount ||= params[:amount].to_f
+  end
+
+  def impact_balances
+    sender_account_manager = AccountManagerService.new(user)
+    receiver_account_manager = AccountManagerService.new(friend)
+
+    sender_account_manager.decrease_account!(amount)
+    receiver_account_manager.increase_account!(amount)
   end
 end
