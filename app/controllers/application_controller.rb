@@ -9,7 +9,7 @@ class ApplicationController < ActionController::API
   private
 
   def current_user
-    @current_user ||= User.find(params[:id])
+    @current_user ||= User.find(params[:id] || params[:user_id])
   end
 
   def render_unknown_error(exception)
