@@ -1,2 +1,0 @@
-class VenmoApiError < StandardError
-end

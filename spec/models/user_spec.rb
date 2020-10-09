@@ -40,16 +40,6 @@ RSpec.describe User, type: :model do
       is_expected.to have_many(:incoming_friends).through(:incoming_friendships)
                                                  .source(:user)
     }
-    it {
-      is_expected.to have_many(:received_payments).class_name('Payment')
-                                                  .dependent(:nullify)
-                                                  .inverse_of(:receiver)
-    }
-    it {
-      is_expected.to have_many(:sent_payments).class_name('Payment')
-                                              .dependent(:nullify)
-                                              .inverse_of(:sender)
-    }
   end
 
   describe '#friends' do
