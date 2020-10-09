@@ -17,7 +17,7 @@ FactoryBot.define do
   factory :payment do
     sender
     receiver
-    amount      { Faker::Number.between(from: 0.1, to: 999.99) }
+    amount      { Faker::Number.between(from: 0.1, to: 999.99).round(2) }
     description { Faker::Lorem.paragraph }
   end
 end

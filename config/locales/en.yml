@@ -40,3 +40,7 @@ en:
     friendship:
       error:
         already_exist: 'The frienship already exists'
+  errors:
+    title: 'Something went wrong'
+    payment:
+      no_friends: 'You must be friend to send payments'
