@@ -10,7 +10,7 @@
 #
 
 FactoryBot.define do
-  factory :user, aliases: [:friend] do
+  factory :user, aliases: %i[friend sender receiver] do
     email { Faker::Internet.unique.email }
     name  { Faker::Name.name }
   end

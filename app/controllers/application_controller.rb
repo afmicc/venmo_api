@@ -5,6 +5,7 @@ class ApplicationController < ActionController::API
   rescue_from ActionController::ParameterMissing,  with: :render_parameter_missing
   rescue_from ActiveRecord::RecordInvalid,         with: :render_record_invalid
   rescue_from ActiveRecord::RecordNotFound,        with: :render_not_found
+  rescue_from VenmoApiError,                       with: :render_venmo_error
 
   private
 
@@ -36,6 +37,12 @@ class ApplicationController < ActionController::API
     logger.info(exception)
     render json: json_error(exception, I18n.t('api.errors.not_found')),
            status: :not_found
+  end
+
+  def render_venmo_error(exception)
+    logger.info(exception)
+    render json: json_error(exception, I18n.t('errors.title')),
+           status: :bad_request
   end
 
   def json_error(exception, title)
