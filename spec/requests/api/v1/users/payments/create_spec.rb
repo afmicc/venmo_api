@@ -35,6 +35,21 @@ describe 'POST /api/v1/users/:user_id/payments', type: :request do
         )
       end
 
+      it 'creates a new event' do
+        expect { send_payment }.to change(Event, :count).by(1)
+      end
+
+      it 'matches event attributes' do
+        send_payment
+        event = Event.last
+        expect(event.to_json).to include_json(
+          user_id: user.id,
+          content: "#{user.name} paid #{friend.name} on"\
+                   " #{event.created_at.strftime('%d %b %H:%M')} " \
+                   "- #{params[:payment][:description]}"
+        )
+      end
+
       context 'when the params are inverted' do
         let(:user_id) { friend.id }
         let(:friend_id) { user.id }
@@ -59,6 +74,21 @@ describe 'POST /api/v1/users/:user_id/payments', type: :request do
             description: params[:payment][:description]
           )
         end
+
+        it 'creates a new event' do
+          expect { send_payment }.to change(Event, :count).by(1)
+        end
+
+        it 'matches event attributes' do
+          send_payment
+          event = Event.last
+          expect(event.to_json).to include_json(
+            user_id: friend.id,
+            content: "#{friend.name} paid #{user.name} on"\
+                     " #{event.created_at.strftime('%d %b %H:%M')} " \
+                     "- #{params[:payment][:description]}"
+          )
+        end
       end
     end
 
@@ -78,6 +108,10 @@ describe 'POST /api/v1/users/:user_id/payments', type: :request do
           error: 'Something went wrong',
           detail: 'You must be friend to send payments'
         )
+      end
+
+      it 'does not create a new event' do
+        expect { send_payment }.not_to change(Event, :count)
       end
     end
   end
@@ -105,6 +139,10 @@ describe 'POST /api/v1/users/:user_id/payments', type: :request do
           error: 'A required param is missing'
         )
       end
+
+      it 'does not create a new event' do
+        expect { send_payment }.not_to change(Event, :count)
+      end
     end
 
     context 'when missing friend id' do
@@ -124,6 +162,10 @@ describe 'POST /api/v1/users/:user_id/payments', type: :request do
         expect(response.parsed_body).to include_json(
           error: "Couldn't find the record"
         )
+      end
+
+      it 'does not create a new event' do
+        expect { send_payment }.not_to change(Event, :count)
       end
     end
 
@@ -156,6 +198,10 @@ describe 'POST /api/v1/users/:user_id/payments', type: :request do
             }
           )
         end
+
+        it 'does not create a new event' do
+          expect { send_payment }.not_to change(Event, :count)
+        end
       end
 
       context 'when amount is less or equal than 0' do
@@ -178,6 +224,10 @@ describe 'POST /api/v1/users/:user_id/payments', type: :request do
               amount: contain_exactly('must be greater than 0')
             }
           )
+        end
+
+        it 'does not create a new event' do
+          expect { send_payment }.not_to change(Event, :count)
         end
       end
 
@@ -202,6 +252,10 @@ describe 'POST /api/v1/users/:user_id/payments', type: :request do
             }
           )
         end
+
+        it 'does not create a new event' do
+          expect { send_payment }.not_to change(Event, :count)
+        end
       end
     end
 
@@ -220,6 +274,10 @@ describe 'POST /api/v1/users/:user_id/payments', type: :request do
 
       it 'creates a new payment' do
         expect { send_payment }.to change(Payment, :count).by(1)
+      end
+
+      it 'creates a new event' do
+        expect { send_payment }.to change(Event, :count).by(1)
       end
     end
   end

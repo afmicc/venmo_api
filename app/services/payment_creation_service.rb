@@ -10,12 +10,10 @@ class PaymentCreationService
 
     validate!
 
-    Payment.create!(
-      sender: user,
-      receiver: friend,
-      amount: params[:amount],
-      description: params[:description] || ''
-    )
+    ActiveRecord::Base.transaction do
+      payment = create_payment
+      EventRegisterService.new.by_payment!(payment)
+    end
   end
 
   private
@@ -26,5 +24,14 @@ class PaymentCreationService
 
   def friend
     @friend ||= User.find(params[:friend_id])
+  end
+
+  def create_payment
+    Payment.create!(
+      sender: user,
+      receiver: friend,
+      amount: params[:amount],
+      description: params[:description] || ''
+    )
   end
 end

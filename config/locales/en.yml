@@ -40,6 +40,8 @@ en:
     friendship:
       error:
         already_exist: 'The frienship already exists'
+    event:
+      by_payment: '%{sender} paid %{receiver} on %{date} - %{description}'
   errors:
     title: 'Something went wrong'
     payment:
