@@ -1,0 +1,2 @@
+class VenmoApiError < StandardError
+end
