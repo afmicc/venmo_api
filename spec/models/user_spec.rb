@@ -50,6 +50,7 @@ RSpec.describe User, type: :model do
                                               .dependent(:nullify)
                                               .inverse_of(:sender)
     }
+    it { is_expected.to have_one(:account) }
   end
 
   describe '#friends' do

@@ -16,6 +16,10 @@ describe 'POST /api/v1/users', type: :request do
       expect { create_user }.to change(User, :count).by(1)
     end
 
+    it 'creates the user account' do
+      expect { create_user }.to change(Account, :count).by(1)
+    end
+
     it 'returns the new user info' do
       create_user
       expect(response.parsed_body).to include_json(
@@ -42,6 +46,10 @@ describe 'POST /api/v1/users', type: :request do
         expect { create_user }.not_to change(User, :count)
       end
 
+      it 'does not create the user account' do
+        expect { create_user }.not_to change(Account, :count)
+      end
+
       it 'returns an error message' do
         create_user
         expect(response.parsed_body).to include_json(
@@ -60,6 +68,10 @@ describe 'POST /api/v1/users', type: :request do
 
       it 'does not create a new user' do
         expect { create_user }.not_to change(User, :count)
+      end
+
+      it 'does not create the user account' do
+        expect { create_user }.not_to change(Account, :count)
       end
 
       it 'returns an error message' do
@@ -83,6 +95,10 @@ describe 'POST /api/v1/users', type: :request do
 
       it 'does not create a new user' do
         expect { create_user }.not_to change(User, :count)
+      end
+
+      it 'does not create the user account' do
+        expect { create_user }.not_to change(Account, :count)
       end
 
       it 'returns an error message' do
@@ -111,6 +127,10 @@ describe 'POST /api/v1/users', type: :request do
 
       it 'does not create a new user' do
         expect { create_user }.not_to change(User, :count)
+      end
+
+      it 'does not create the user account' do
+        expect { create_user }.not_to change(Account, :count)
       end
 
       it 'returns an error message' do
