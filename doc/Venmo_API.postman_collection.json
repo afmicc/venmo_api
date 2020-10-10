@@ -1,0 +1,420 @@
+{
+	"info": {
+		"_postman_id": "21934a07-e25f-4c6f-abb8-5ef3246a3e00",
+		"name": "Venmo API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user\":\n    {\n        \"name\": \"Agustin\",\n        \"email\": \"agustin.martinez@rootstrap.com\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://agustin-venmo-api.herokuapp.com/api/v1/users",
+							"protocol": "https",
+							"host": [
+								"agustin-venmo-api",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://agustin-venmo-api.herokuapp.com/api/v1/users/:user_id",
+							"protocol": "https",
+							"host": [
+								"agustin-venmo-api",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								":user_id"
+							],
+							"variable": [
+								{
+									"key": "user_id",
+									"value": "11"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Friendships",
+			"item": [
+				{
+					"name": "Add Friend",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://agustin-venmo-api.herokuapp.com/api/v1/users/:user_id/friendships/?friend_id=1",
+							"protocol": "https",
+							"host": [
+								"agustin-venmo-api",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								":user_id",
+								"friendships",
+								""
+							],
+							"query": [
+								{
+									"key": "friend_id",
+									"value": "1"
+								}
+							],
+							"variable": [
+								{
+									"key": "user_id",
+									"value": "11"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "de5111ae-ca94-45ee-a6b7-4dac107a32e5",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "e7a953b9-31fd-4e26-9549-5b9e2b8ed7db",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Payments",
+			"item": [
+				{
+					"name": "Sending a payment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"payment\":\n    {\n        \"amount\": 50,\n        \"friend_id\": 11,\n        \"description\": \"I'm Aleen sending a payment to Agustin\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://agustin-venmo-api.herokuapp.com/api/v1/users/:user_id/payments",
+							"protocol": "https",
+							"host": [
+								"agustin-venmo-api",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								":user_id",
+								"payments"
+							],
+							"variable": [
+								{
+									"key": "user_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "No Friends - Sending payment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"payment\":\n    {\n        \"amount\": 200,\n        \"friend_id\": 7,\n        \"description\": \"I'm trying to send an unallowed payment to Livia because we aren't friends\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://agustin-venmo-api.herokuapp.com/api/v1/users/:user_id/payments",
+							"protocol": "https",
+							"host": [
+								"agustin-venmo-api",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								":user_id",
+								"payments"
+							],
+							"variable": [
+								{
+									"key": "user_id",
+									"value": "11"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Huge amount - Sending payment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"payment\":\n    {\n        \"amount\": 1000.50,\n        \"friend_id\": 1,\n        \"description\": \"I'm trying to send an unallowed payment to Aleen because the amount is too big\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://agustin-venmo-api.herokuapp.com/api/v1/users/:user_id/payments",
+							"protocol": "https",
+							"host": [
+								"agustin-venmo-api",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								":user_id",
+								"payments"
+							],
+							"variable": [
+								{
+									"key": "user_id",
+									"value": "11"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Little amount - Sending payment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"payment\":\n    {\n        \"amount\": 0,\n        \"friend_id\": 1,\n        \"description\": \"I'm trying to send an unallowed payment to Aleen because the amount is too small\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://agustin-venmo-api.herokuapp.com/api/v1/users/:user_id/payments",
+							"protocol": "https",
+							"host": [
+								"agustin-venmo-api",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								":user_id",
+								"payments"
+							],
+							"variable": [
+								{
+									"key": "user_id",
+									"value": "11"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "No found user - Sending payment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"payment\":\n    {\n        \"amount\": 192.50,\n        \"friend_id\": 100,\n        \"description\": \"I'm trying to send an unallowed payment because the receiver is a strange\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://agustin-venmo-api.herokuapp.com/api/v1/users/:user_id/payments",
+							"protocol": "https",
+							"host": [
+								"agustin-venmo-api",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								":user_id",
+								"payments"
+							],
+							"variable": [
+								{
+									"key": "user_id",
+									"value": "11"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Feed",
+			"item": [
+				{
+					"name": "View event",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://agustin-venmo-api.herokuapp.com/api/v1/users/:user_id/feed?page=1",
+							"protocol": "https",
+							"host": [
+								"agustin-venmo-api",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								":user_id",
+								"feed"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								}
+							],
+							"variable": [
+								{
+									"key": "user_id",
+									"value": "11"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Balance",
+			"item": [
+				{
+					"name": "Get balance",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://agustin-venmo-api.herokuapp.com/api/v1/users/:user_id/balance",
+							"protocol": "https",
+							"host": [
+								"agustin-venmo-api",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								":user_id",
+								"balance"
+							],
+							"variable": [
+								{
+									"key": "user_id",
+									"value": "11"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
